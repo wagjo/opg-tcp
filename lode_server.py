@@ -34,7 +34,7 @@ def recv_message(sock: socket.socket) -> dict | None:
     return json.loads(data.decode("utf-8"))
 # ====================================================
 
-GRID_SIZE = 4
+GRID_SIZE = 16
 CELL_SIZE = 50
 WINDOW_WIDTH = 1200
 WINDOW_HEIGHT = 900
@@ -58,7 +58,7 @@ def main():
     ship_fleet = []          # list of sets: každá loď = set pozícií, ktoré ešte nie sú zasiahnuté
     occupied = set()         # pomocná množina pre kontrolu dotykov
 
-    ship_specs = [(3, 1)]   # (dĺžka, počet lodí)
+    ship_specs = [(3, 5), (2, 5), (1, 5), (4, 2)]   # (dĺžka, počet lodí)
 
     for length, count in ship_specs:
         for _ in range(count):
