@@ -11,12 +11,12 @@ def handle_client(conn, addr):
             if not data:
                 print(f"Klient {addr} ukončil spojenie.")
                 try:
-                    conn.sendall(b"Prajem pekny den")
+                    #conn.sendall(b"Prajem pekny den")
                     conn.shutdown(socket.SHUT_WR)
                 except:
                     pass
                 break
-            print(f"Sprava od {addr}: {data.decode('utf-8')}")
+            #print(f"Sprava od {addr}: {data.decode('utf-8')}")
             conn.sendall(data)
         except socket.timeout:
             print(".", end="", flush=True)
@@ -26,7 +26,7 @@ def handle_client(conn, addr):
     conn.close()
 
 
-HOST = '127.0.0.1'
+HOST = '0.0.0.0'
 PORT = 65432
 
 

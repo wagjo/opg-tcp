@@ -34,10 +34,10 @@ def recv_message(sock: socket.socket) -> dict | None:
     return json.loads(data.decode("utf-8"))
 # ====================================================
 
-GRID_SIZE = 16
+GRID_SIZE = 15
 CELL_SIZE = 50
 WINDOW_WIDTH = 1200
-WINDOW_HEIGHT = 900
+WINDOW_HEIGHT = 850
 
 BLACK = (0, 0, 0)
 BLUE = (0, 100, 255)
@@ -152,10 +152,10 @@ def main():
             try:
                 sock, msg = message_queue.get_nowait()
 
-                if msg.get("type") == "disconnect":
-                    players.pop(sock, None)
-                    sock.close()
-                    continue
+                # if msg.get("type") == "disconnect":
+                #     players.pop(sock, None)
+                #     sock.close()
+                #     continue
 
                 if msg.get("type") != "guess":
                     continue
@@ -168,9 +168,12 @@ def main():
                     send_message(sock, {"type": "error", "msg": "Neplatné súradnice!"})
                     continue
 
+                ip, addr = sock.getpeername()
+                #ip = sock
+                #print("aaa" + ip)
                 # Pridáme hráča (ak ešte nie je) – zobrazí sa v zozname pripojených
-                if sock not in players:
-                    players[sock] = {
+                if ip not in players:
+                    players[ip] = {
                         "name": player_name,
                         "score": 0,
                         "attempts": 0,
@@ -178,16 +181,17 @@ def main():
                     }
 
                 current_time = time.time()
-                if current_time - players[sock]["last_shot_time"] < 2.0:
+                if current_time - players[ip]["last_shot_time"] < 2.0:
                     send_message(sock, {
-                        "type": "error",
+                       "type": "error",
                         "msg": "Príliš rýchlo! Počkaj 2 sekundy medzi strelami."
                     })
                     continue
 
+
                 # Aktualizácia času a počtu pokusov
-                players[sock]["last_shot_time"] = current_time
-                players[sock]["attempts"] += 1
+                players[ip]["last_shot_time"] = current_time
+                players[ip]["attempts"] += 1
 
                 pos = (x, y)
 
@@ -212,10 +216,10 @@ def main():
 
                 # Odpoveď klientovi
                 if is_hit:
-                    score = players[sock]["score"]
+                    score = players[ip]["score"]
                     if sunk:
-                        players[sock]["score"] += 1
-                        score = players[sock]["score"]
+                        players[ip]["score"] += 1
+                        score = players[ip]["score"]
                         print(f"🔥 {player_name} POTOPIL loď na ({x},{y})! Skóre: {score}")
                     else:
                         print(f"🔥 {player_name} zasiahol ({x},{y})")
@@ -235,7 +239,7 @@ def main():
                         "sunk": False,
                         "x": x,
                         "y": y,
-                        "score": players[sock]["score"]
+                        "score": players[ip]["score"]
                     }
 
                 send_message(sock, resp)
