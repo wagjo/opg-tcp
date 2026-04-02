@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <title>Moja stránka z TCP servera</title>
+    <style>
+        body { font-family: Arial; text-align: center; margin-top: 50px; }
+        h1 { color: #2e7d32; }
+    </style>
+</head>
+<body>
+    <h1>Ahoj! Toto je index.html zo súboru 🎉</h1>
+    <p>Server beží cez čistý TCP socket v Pythone.</p>
+    <p>Aktuálny čas: <strong id="time"></strong></p>
+
+    <script>
+        document.getElementById("time").textContent = new Date().toLocaleString("sk-SK");
+    </script>
+</body>
+</html>
